@@ -13,9 +13,6 @@ from enums import (
     EPCScore,
 )
 
-API_BASE_URL = "https://challenge-api-deployment-13tu.onrender.com"
-API_PREDICT_ENDPOINT = "/predict"
-
 # --- Helpers ---
 
 # Combine subtype enums based on selected type ---
@@ -122,7 +119,7 @@ if st.button("Predict Price"):
         input_data["toiletCount"] = toilets
 
     payload = {"data": input_data}
-    url = urljoin(API_BASE_URL, API_PREDICT_ENDPOINT)
+    url = urljoin(st.secrets["predict_api"]["base_url"], st.secrets["predict_api"]["predict_endpoint"])
 
     try:
         response = requests.post(url, json=payload)
