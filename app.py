@@ -18,7 +18,6 @@ API_PREDICT_ENDPOINT = "/predict"
 
 # --- Helpers ---
 
-
 # Combine subtype enums based on selected type ---
 def get_subtype_options(property_type: PropertyType):
     common = [e.value for e in CommonSubtype]
@@ -29,11 +28,6 @@ def get_subtype_options(property_type: PropertyType):
     else:
         specific = []
     return [""] + common + specific  # "" = no selection
-
-
-# Insert space before each capital letter except at the start
-def add_space_before_caps(s: str) -> str:
-    return re.sub(r"(?<!^)(?=[A-Z])", " ", s)
 
 
 # --- UI ---
