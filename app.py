@@ -57,14 +57,7 @@ property_subtype = st.selectbox(
     format_func=lambda x: x.replace("_", " ").title()
 )
 
-# Province dropdown
-province = st.selectbox(
-    "Province",
-    options=[""] + [e.value for e in Province],
-    format_func=lambda x: add_space_before_caps(x) if x else " "
-)
-
-postcode = st.number_input("Postcode (Optional)", min_value=1000, max_value=9999, step=1)
+postcode = st.number_input("Postcode", min_value=1000, max_value=9999, step=1)
 
 # EPC dropdown
 epc_score = st.selectbox(
@@ -110,7 +103,6 @@ if st.button("Predict Price"):
     }
 
     # Optional fields only if set
-    if province: input_data["province"] = province
     if postcode: input_data["postCode"] = int(postcode)
     if property_subtype: input_data["subtype"] = property_subtype
     if epc_score: input_data["epcScore"] = epc_score
