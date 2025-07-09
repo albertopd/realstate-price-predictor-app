@@ -18,6 +18,7 @@ API_PREDICT_ENDPOINT = "/predict"
 
 # --- Helpers ---
 
+
 # Combine subtype enums based on selected type ---
 def get_subtype_options(property_type: PropertyType):
     common = [e.value for e in CommonSubtype]
@@ -29,9 +30,11 @@ def get_subtype_options(property_type: PropertyType):
         specific = []
     return [""] + common + specific  # "" = no selection
 
+
 # Insert space before each capital letter except at the start
 def add_space_before_caps(s: str) -> str:
     return re.sub(r"(?<!^)(?=[A-Z])", " ", s)
+
 
 # --- UI ---
 
@@ -40,21 +43,21 @@ st.markdown("*Powered by ML API hosted on render.com*")
 
 st.subheader("Property Details:")
 
-habitable_surface = st.slider("Habitable Surface (m²)", min_value=1, max_value=1000, value=1, step=1)
+habitable_surface = st.slider(
+    "Habitable Surface (m²)", min_value=10, max_value=1000, value=10, step=1
+)
 
 # Property type dropdown
 property_type = st.selectbox(
     label="Property Type",
     options=[e.value for e in PropertyType],
-    format_func=lambda x: x.replace("_", " ").title()
+    format_func=lambda x: x.replace("_", " ").title(),
 )
 
 # Property subtype dropdown (dependent)
 subtype_options = get_subtype_options(PropertyType(property_type))
 property_subtype = st.selectbox(
-    "Subtype", 
-    subtype_options,
-    format_func=lambda x: x.replace("_", " ").title()
+    "Subtype", subtype_options, format_func=lambda x: x.replace("_", " ").title()
 )
 
 postcode = st.number_input("Postcode", min_value=1000, max_value=9999, step=1)
@@ -63,11 +66,15 @@ postcode = st.number_input("Postcode", min_value=1000, max_value=9999, step=1)
 epc_score = st.selectbox(
     "EPC Score",
     options=[""] + [e.value for e in EPCScore],
-    format_func=lambda x: x if x else " "
+    format_func=lambda x: x if x else " ",
 )
 
-terrace_surface = st.slider("Terrace Surface (m²)", min_value=0, max_value=500, value=0, step=1)
-garden_surface = st.slider("Garden Surface (m²)", min_value=0, max_value=2000, value=0, step=1)
+terrace_surface = st.slider(
+    "Terrace Surface (m²)", min_value=0, max_value=500, value=0, step=1
+)
+garden_surface = st.slider(
+    "Garden Surface (m²)", min_value=0, max_value=2000, value=0, step=1
+)
 
 bedrooms = st.slider("Bedrooms", min_value=0, max_value=10, value=0, step=1)
 bathrooms = st.slider("Bathrooms", min_value=0, max_value=10, value=0, step=1)
@@ -90,7 +97,7 @@ features = {
     "hasPhotovoltaicPanels": st.checkbox("Photovoltaic Panels"),
     "hasSwimmingPool": st.checkbox("Swimming Pool"),
     "hasTerrace": st.checkbox("Terrace"),
-    "hasVisiophone": st.checkbox("Visiophone")
+    "hasVisiophone": st.checkbox("Visiophone"),
 }
 
 st.markdown("---")
@@ -99,18 +106,26 @@ if st.button("Predict Price"):
     input_data = {
         "type": property_type,
         "habitableSurface": habitable_surface,
-        **features
+        **features,
     }
 
     # Optional fields only if set
-    if postcode: input_data["postCode"] = int(postcode)
-    if property_subtype: input_data["subtype"] = property_subtype
-    if epc_score: input_data["epcScore"] = epc_score
-    if terrace_surface > 0: input_data["terraceSurface"] = terrace_surface
-    if garden_surface > 0: input_data["gardenSurface"] = garden_surface
-    if bedrooms > 0: input_data["bedroomCount"] = bedrooms
-    if bathrooms > 0: input_data["bathroomCount"] = bathrooms
-    if toilets > 0: input_data["toiletCount"] = toilets
+    if postcode:
+        input_data["postCode"] = int(postcode)
+    if property_subtype:
+        input_data["subtype"] = property_subtype
+    if epc_score:
+        input_data["epcScore"] = epc_score
+    if terrace_surface > 0:
+        input_data["terraceSurface"] = terrace_surface
+    if garden_surface > 0:
+        input_data["gardenSurface"] = garden_surface
+    if bedrooms > 0:
+        input_data["bedroomCount"] = bedrooms
+    if bathrooms > 0:
+        input_data["bathroomCount"] = bathrooms
+    if toilets > 0:
+        input_data["toiletCount"] = toilets
 
     payload = {"data": input_data}
     url = urljoin(API_BASE_URL, API_PREDICT_ENDPOINT)
